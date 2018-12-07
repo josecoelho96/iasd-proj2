@@ -25,7 +25,7 @@ class Problem(csp.CSP):
 
 
     def __init__(self):
-        variables = ("X", "Y", "Z", "T")
+        variables = {"X", "Y", "Z", "T"}
         domains = {
             "X": [1, 2, 3],
             "Y": [1, 2, 3],
