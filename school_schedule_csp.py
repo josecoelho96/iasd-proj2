@@ -13,21 +13,47 @@ class Problem(csp.CSP):
         for line in lines:
             # Remove '\n' and split on spaces
             l = line.strip().split(" ")
-            print("[DEBUG] Line containing set: {}.".format(l[0]))
             if l[0] == "T":
-                print("[DEBUG] Line containing timetable slots set.")
+                time_slots = set(l[1:])
+                print("[DEBUG] Time slots set: '{}'.".format(time_slots))
             elif l[0] == "R":
-                print("[DEBUG] Line containing rooms set.")
+                rooms = set(l[1:])
+                print("[DEBUG] Rooms set: '{}'.".format(rooms))
             elif l[0] == "S":
-                print("[DEBUG] Line containing student classes set.")
+                student_classes = set(l[1:])
+                print("[DEBUG] Student classes set: '{}'.".format(student_classes))
             elif l[0] == "W":
-                print("[DEBUG] Line containing weekly classes set.")
-                for weekly_class in l[1:]:
-                    print(weekly_class)
+                weekly_classes = set(l[1:])
+                print("[DEBUG] Weekly classes set (variables): '{}'.".format(weekly_classes))
             elif l[0] == "A":
-                print("[DEBUG] Line containing associations set.")
+                associations = set(l[1:])
+                print("[DEBUG] Assocations set: '{}'.".format(associations))
 
-        # super().__init__(variables, domains, graph, constraints_function)
+        # Create domain (same for all variables)
+        domain = set()
+        for t in time_slots:
+            for r in rooms:
+                domain.add("{} {}".format(t, r))
+
+        domains = {}
+        for var in weekly_classes:
+            domains[var] = domain
+        print("[DEBUG] Domains: {}".format(domains))
+
+        graph = {}
+        for var in weekly_classes:
+            print("[DEBUG] var: {}".format(var))
+            new_vars = set(weekly_classes)
+            new_vars.remove(var)
+            print("[DEBUG] new_vars: {}".format(new_vars))
+            graph[var] = new_vars
+        print("[DEBUG] Graph: {}".format(graph))
+
+
+        def constraints_function(A, a, B, b):
+            return True
+
+        super().__init__(weekly_classes, domains, graph, constraints_function)
 
     def dump_solution(self, fh):
         # Place here your code to write solution to opened file object fh
@@ -35,5 +61,6 @@ class Problem(csp.CSP):
 
 def solve(input_file, output_file):
     p = Problem(input_file)
+    print(csp.backtracking_search(p))
     # Place here your code that calls function csp.backtracking_search(self, ...)
     p.dump_solution(output_file)
