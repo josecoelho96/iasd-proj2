@@ -1,0 +1,5 @@
+T Mon,8 Mon,9 Mon,10 Mon,11 Mon,12 Tue,8 Tue,9 Tue,10 Tue,11 Tue,12 Wed,8 Wed,9 Wed,10 Wed,11 Wed,12 Thu,8 Thu,9 Thu,10 Thu,11 Thu,12 Fri,8 Fri,9 Fri,10 Fri,11 Fri,12
+R EA1 EA2 EA3 EA4
+S MEEC MEAer
+W IASD,T,1 IASD,T,2 IASD,PB,1 SAut,T,1 SAut,T,2 SAut,L,1 SAut,L,2 GTA,T,1 GTA,T,2 GTA,PB,1 AAut,T,1 AAut,T,2
+A MEEC,IASD MEEC,SAut MEEC,AAut MEAer,SAut MEAer,IASD MEAer,GTA
