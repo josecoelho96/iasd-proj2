@@ -45,6 +45,16 @@ class Problem(csp.CSP):
             else:
                 associations[l[1]] = {l[0]}
 
+        # Get lower and upper hour bound
+        self.hour_lower_bound = 24
+        self.hour_upper_bound = 0
+        for t in time_slots:
+            hour = int(t.split(",")[1])
+            if hour > self.hour_upper_bound:
+                self.hour_upper_bound = hour
+            if hour < self.hour_lower_bound:
+                self.hour_lower_bound = hour
+
         def constraints_function(A, a, B, b):
 
             # Split variables into more easier to recall names
@@ -77,19 +87,63 @@ class Problem(csp.CSP):
             if associations[A_course].intersection(associations[B_course]) and a_time == b_time:
                 return False
 
+            if int(a_hour) > self.current_upper_bound or int(b_hour) > self.current_upper_bound:
+                return False
+
             return True
 
         super().__init__(weekly_classes, domains, graph, constraints_function)
 
     def csp_backtracking_search(self):
-        self.solution = csp.backtracking_search(self)
+        # select_unassigned_variable:
+        # -* first_unassigned_variable
+        # - mrv
+        # - num_legal_values
+
+        # order_domain_values:
+        # -* unordered_domain_values
+        # - lcv
+
+        # inference
+        # -* no_inference
+        # - forward_checking
+        # - mac
+
+        self.current_upper_bound = self.hour_upper_bound
+
+        current_solution = csp.backtracking_search(self,
+            select_unassigned_variable=csp.first_unassigned_variable,
+            order_domain_values=csp.unordered_domain_values,
+            inference=csp.no_inference)
+
+        if self.hour_upper_bound == self.hour_lower_bound:
+            self.solution = current_solution
+            return
+        else:
+            while self.current_upper_bound > self.hour_lower_bound:
+                self.current_upper_bound -= 1
+                new_solution = csp.backtracking_search(self,
+                        select_unassigned_variable=csp.first_unassigned_variable,
+                        order_domain_values=csp.unordered_domain_values,
+                        inference=csp.no_inference)
+                if new_solution == None:
+                    self.solution = current_solution
+                    return
+
+
+
+
+        self.solution = csp.backtracking_search(self,
+                            select_unassigned_variable=csp.first_unassigned_variable,
+                            order_domain_values=csp.unordered_domain_values,
+                            inference=csp.no_inference)
+        return self.solution
 
     def dump_solution(self, fh):
         if self.solution == None:
             fh.write("None")
         else:
             for key, value in self.solution.items():
-                # print("[DEBUG] : {} {}".format(key, value))
                 fh.write("{} {}\n".format(key, value))
 
 def solve(input_file, output_file):
