@@ -41,11 +41,9 @@ class Problem(csp.CSP):
         for association in associations_list:
             l = association.split(",")
             if l[1] in associations:
-                associations[l[1]].append(l[0])
+                associations[l[1]].add(l[0])
             else:
-                associations[l[1]] = [l[0]]
-
-        print(associations)
+                associations[l[1]] = {l[0]}
 
         def constraints_function(A, a, B, b):
 
@@ -76,6 +74,8 @@ class Problem(csp.CSP):
             if A_course == B_course and a_time == b_time:
                 return False
 
+            if associations[A_course].intersection(associations[B_course]) and a_time == b_time:
+                return False
 
             return True
 
@@ -89,7 +89,7 @@ class Problem(csp.CSP):
             fh.write("None")
         else:
             for key, value in self.solution.items():
-                print("[DEBUG] : {} {}".format(key, value))
+                # print("[DEBUG] : {} {}".format(key, value))
                 fh.write("{} {}\n".format(key, value))
 
 def solve(input_file, output_file):
