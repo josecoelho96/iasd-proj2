@@ -1,4 +1,5 @@
 import csp
+import copy
 
 class Problem(csp.CSP):
 
@@ -54,7 +55,7 @@ class Problem(csp.CSP):
                 self.hour_upper_bound = hour
             if hour < self.hour_lower_bound:
                 self.hour_lower_bound = hour
-
+                
         # Define current upper bound
         self.current_upper_bound = self.hour_upper_bound
         print("[DEBUG] : Lower hour bound: {}".format(self.hour_lower_bound))
@@ -92,6 +93,8 @@ class Problem(csp.CSP):
                 # print("[DEBUG] : Failed, same course at the same time!")
                 return False
 
+            # A course class can not happen at the same time as other course class
+            # if a student must have both
             if associations[A_course].intersection(associations[B_course]) and a_time == b_time:
                 # print("[DEBUG] : Failed, course classes at the same time!")
                 return False
@@ -118,25 +121,20 @@ class Problem(csp.CSP):
         # -* no_inference
         # - forward_checking
         # - mac
-
+    
         # Run first attempt to find a solution without any optimization
         print("[DEBUG] : Current upper bound: {}".format(self.current_upper_bound))
         first_solution = csp.backtracking_search(self,
             select_unassigned_variable = csp.mrv,
             order_domain_values = csp.lcv,
             inference = csp.forward_checking)
-        print("[DEBUG] : First solution: {}".format(first_solution))
         if first_solution == None:
             self.solution = first_solution
-            print("[DEBUG] : First solution not found.")
             return
         else:
-            print("[DEBUG] : First solution found, find better values.")
             # Find a better suited value for J
             old_solution = first_solution
             new_solution = old_solution
-
-            # Iterate only while the upper bound can go lower
             while self.current_upper_bound > self.hour_lower_bound:
                 self.current_upper_bound -= 1
                 self.curr_domains = None
@@ -146,18 +144,51 @@ class Problem(csp.CSP):
                     select_unassigned_variable = csp.mrv,
                     order_domain_values = csp.lcv,
                     inference = csp.forward_checking)
-                print("[DEBUG] : New solution: {}".format(new_solution))
-
                 if new_solution != None:
-                    print("[DEBUG] : New solution is not None")
                     old_solution = new_solution
-                    self.solution = new_solution
-                else:
-                    print("[DEBUG] : New solution is None")
-                    self.solution = old_solution
-                    return
+
+                    
+
+        # Run first attempt to find a solution without any optimization
+        #self.current_upper_bound -= 1
+        #print("[DEBUG] Current upper bound: {}".format(self.current_upper_bound))
+        #first_solution = csp.backtracking_search(self,
+        #    select_unassigned_variable = csp.mrv,
+        #    order_domain_values = csp.lcv,
+        #    inference = csp.forward_checking)
+
+        #print("[DEBUG] First solution: {}".format(first_solution))
+        #self.solution = first_solution
+
+        #self.current_upper_bound -= 1
+        #self.curr_domains = None
+        #self.nassigns = 0
+        #second_solution = csp.backtracking_search(self,
+        #    select_unassigned_variable = csp.mrv,
+        #    order_domain_values = csp.lcv,
+        #    inference = csp.forward_checking)
+        #print("[DEBUG] : Second solution: {}".format(second_solution))
+
+        #self.current_upper_bound -= 1
+        #self.curr_domains = None
+        #self.nassigns = 0
+        #third_solution = csp.backtracking_search(self,
+        #    select_unassigned_variable = csp.mrv,
+        #    order_domain_values = csp.lcv,
+        #    inference = csp.forward_checking)
+        #print("[DEBUG] : Third solution: {}".format(third_solution))
+
+        #self.current_upper_bound -= 1
+        #self.curr_domains = None
+        #self.nassigns = 0
+        #fourth_solution = csp.backtracking_search(self,
+        #    select_unassigned_variable = csp.mrv,
+        #    order_domain_values = csp.lcv,
+        #    inference = csp.forward_checking)
+        # print("[DEBUG] : Fourth solution: {}".format(fourth_solution))
 
     def dump_solution(self, fh):
+        print("[DEBUG] : Solution")
         if self.solution == None:
             fh.write("None")
             print("[DEBUG] : None")
