@@ -57,8 +57,6 @@ class Problem(csp.CSP):
 
         # Define current upper bound
         self.current_upper_bound = self.hour_upper_bound
-        print("[DEBUG] : Lower hour bound: {}".format(self.hour_lower_bound))
-        print("[DEBUG] : Upper hour bound: {}".format(self.hour_upper_bound))
 
         def constraints_function(A, a, B, b):
 
@@ -78,26 +76,21 @@ class Problem(csp.CSP):
 
             # "each room can only hold one class at a time"
             if a_time == b_time and a_room == b_room:
-                # print("[DEBUG] : Failed, same room at the same time!")
                 return False
 
             # "no two weekly classes of the same course
             # and type may occur on the same weekday"
             if A_course == B_course and A_class_kind == B_class_kind and a_day == b_day:
-                # print("[DEBUG] : Failed, same course and type at the same day!")
                 return False
 
             # "each student class can only attend one class at a time"
             if A_course == B_course and a_time == b_time:
-                # print("[DEBUG] : Failed, same course at the same time!")
                 return False
 
             if associations[A_course].intersection(associations[B_course]) and a_time == b_time:
-                # print("[DEBUG] : Failed, course classes at the same time!")
                 return False
 
             if int(a_hour) > self.current_upper_bound or int(b_hour) > self.current_upper_bound:
-                # print("[DEBUG] : Failed, time upper bound!")
                 return False
 
             return True
@@ -105,33 +98,16 @@ class Problem(csp.CSP):
         super().__init__(weekly_classes, domains, graph, constraints_function)
 
     def csp_backtracking_search(self):
-        # select_unassigned_variable:
-        # -* first_unassigned_variable
-        # - mrv
-        # - num_legal_values
-
-        # order_domain_values:
-        # -* unordered_domain_values
-        # - lcv
-
-        # inference
-        # -* no_inference
-        # - forward_checking
-        # - mac
 
         # Run first attempt to find a solution without any optimization
-        print("[DEBUG] : Current upper bound: {}".format(self.current_upper_bound))
         first_solution = csp.backtracking_search(self,
             select_unassigned_variable = csp.mrv,
             order_domain_values = csp.lcv,
             inference = csp.forward_checking)
-        print("[DEBUG] : First solution: {}".format(first_solution))
         if first_solution == None:
             self.solution = first_solution
-            print("[DEBUG] : First solution not found.")
             return
         else:
-            print("[DEBUG] : First solution found, find better values.")
             # Find a better suited value for J
             old_solution = first_solution
             new_solution = old_solution
@@ -141,29 +117,24 @@ class Problem(csp.CSP):
                 self.current_upper_bound -= 1
                 self.curr_domains = None
                 self.nassigns = 0
-                print("[DEBUG] : Current upper bound: {}".format(self.current_upper_bound))
                 new_solution = csp.backtracking_search(self,
                     select_unassigned_variable = csp.mrv,
                     order_domain_values = csp.lcv,
                     inference = csp.forward_checking)
-                print("[DEBUG] : New solution: {}".format(new_solution))
 
                 if new_solution != None:
                     # print("[DEBUG] : New solution is not None")
                     old_solution = new_solution
                     self.solution = new_solution
                 else:
-                    print("[DEBUG] : New solution is None")
                     self.solution = old_solution
                     return
 
     def dump_solution(self, fh):
         if self.solution == None:
             fh.write("None")
-            print("[DEBUG] : None")
         else:
             for key, value in self.solution.items():
-                print("[DEBUG] : {} {}".format(key, value))
                 fh.write("{} {}\n".format(key, value))
 
 def solve(input_file, output_file):
