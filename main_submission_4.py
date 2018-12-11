@@ -96,7 +96,6 @@ class Problem(csp.CSP):
         new_solution = csp.backtracking_search(self,
             select_unassigned_variable = csp.mrv,
             inference = csp.forward_checking)
-        print("[D] [{}] new solution : {}".format(self.current_upper_bound, new_solution))
 
         if new_solution != None:
             self.solution = new_solution
@@ -116,10 +115,8 @@ class Problem(csp.CSP):
     def dump_solution(self, fh):
         if self.solution == None:
             fh.write("None")
-            print("[DEBUG] : None")
         else:
             for key, value in self.solution.items():
-                print("[DEBUG] : {} {},{} {}".format(key, value[0][0], value[0][1], value[1]))
                 fh.write("{} {},{} {}\n".format(key, value[0][0], value[0][1], value[1]))
 
 def solve(input_file, output_file):
