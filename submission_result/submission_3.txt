@@ -1,0 +1,58 @@
+----- PUBLIC TESTS -----
+*** Problem 'P1':
+T Mon,8 Mon,9 Tue,8 Tue,9 Wed,8 Wed,9
+R EA1 EA2 GA1 V0.02
+S MEAer
+W IASD,T,1 IASD,T,2 IASD,PB,1
+A MEAer,IASD
+execution time: 0.000458 secs
+Solution:
+IASD,T,2 Mon,8 GA1
+IASD,PB,1 Wed,8 GA1
+IASD,T,1 Tue,8 GA1
+Cost: 8
+GRADE: 3 point(s)
+*** Problem 'P2':
+T Mon,8 Mon,9 Mon,10 Mon,11 Tue,8 Tue,9 Tue,10 Tue,11 Wed,8 Wed,9 Wed,10 Wed,11 Thu,8 Thu,9 Thu,10 Thu,11
+R EA1
+S MEEC MEAer
+W IASD,T,1 IASD,T,2 IASD,PB,1 SAut,T,1 SAut,T,2 SAut,L,1 SAut,L,2 SAut,L,3 GTA,T,1 GTA,T,2 GTA,PB,1
+A MEEC,IASD MEAer,SAut MEAer,GTA
+execution time: 2.691124 secs
+Solution:
+SAut,T,1 Wed,10 EA1
+SAut,L,1 Mon,10 EA1
+IASD,T,1 Wed,9 EA1
+GTA,PB,1 Tue,9 EA1
+SAut,T,2 Thu,9 EA1
+GTA,T,1 Tue,10 EA1
+IASD,T,2 Thu,8 EA1
+IASD,PB,1 Mon,9 EA1
+GTA,T,2 Mon,8 EA1
+SAut,L,3 Thu,10 EA1
+SAut,L,2 Wed,8 EA1
+Cost: 10
+GRADE: 3 point(s)
+*** Problem 'P3':
+T Mon,8 Mon,9 Mon,10 Mon,11 Mon,12 Tue,8 Tue,9 Tue,10 Tue,11 Tue,12 Wed,8 Wed,9 Wed,10 Wed,11 Wed,12 Thu,8 Thu,9 Thu,10 Thu,11 Thu,12 Fri,8 Fri,9 Fri,10 Fri,11 Fri,12
+R EA1 EA2 EA3 EA4
+S MEEC MEAer
+W IASD,T,1 IASD,T,2 IASD,PB,1 SAut,T,1 SAut,T,2 SAut,L,1 SAut,L,2 GTA,T,1 GTA,T,2 GTA,PB,1 AAut,T,1 AAut,T,2
+A MEEC,IASD MEEC,SAut MEEC,AAut MEAer,SAut MEAer,IASD MEAer,GTA
+execution time: 44.299299 secs
+Solution:
+IASD,T,1 Wed,8 EA3
+GTA,PB,1 Tue,8 EA3
+IASD,PB,1 Fri,9 EA3
+GTA,T,2 Fri,8 EA3
+AAut,T,1 Tue,8 EA4
+IASD,T,2 Mon,9 EA3
+SAut,L,1 Tue,9 EA3
+SAut,L,2 Thu,9 EA3
+SAut,T,2 Thu,8 EA3
+SAut,T,1 Wed,9 EA3
+GTA,T,1 Mon,8 EA3
+AAut,T,2 Fri,8 EA4
+Cost: 9
+GRADE: 3 point(s)
+----- THE END -----
