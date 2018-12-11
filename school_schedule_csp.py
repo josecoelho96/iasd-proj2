@@ -1,7 +1,10 @@
 import csp
+import threading
+import os
+
 
 class Problem(csp.CSP):
-
+    
     def __init__(self, fh):
         # Get all lines from file and check each line
         for line in fh.readlines():
@@ -123,9 +126,24 @@ class Problem(csp.CSP):
                 fh.write("{} {},{} {}\n".format(key, value[0][0], value[0][1], value[1]))
 
 def solve(input_file, output_file):
+    
+    # Timeout of program if running for to long
+    def timeout():
+        print ("Timeout")
+        p.dump_solution(output_file)
+        os._exit(1)
+
     p = Problem(input_file)
+    
+    # Set timer and start it
+    t = threading.Timer(150.0, timeout)
+    t.start()
+    
     while p.csp_backtracking_search():
         if not p.reduce_domains():
             break
 
     p.dump_solution(output_file)
+
+
+
