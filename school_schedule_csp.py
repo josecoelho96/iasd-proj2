@@ -129,8 +129,7 @@ def solve(input_file, output_file):
     
     # Timeout of program if running for to long
     def timeout():
-        print ("Timeout")
-        p.dump_solution(output_file)
+        print ("[DEBUG] : Timeout")
         os._exit(1)
 
     p = Problem(input_file)
