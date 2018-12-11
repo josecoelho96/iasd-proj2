@@ -1,3 +1,0 @@
-IASD,T,1 Mon,9 GA1
-IASD,T,2 Tue,8 V0.02
-IASD,PB,1 Mon,8 GA1
